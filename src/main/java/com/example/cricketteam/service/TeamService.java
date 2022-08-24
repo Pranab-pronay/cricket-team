@@ -6,7 +6,6 @@ import com.example.cricketteam.Dto.ScheduledTaskResponse;
 import com.example.cricketteam.datasource.repository.AssignTaskRepository;
 import com.example.cricketteam.datasource.repository.PlayerRepository;
 import com.example.cricketteam.datasource.repository.TaskRepository;
-import com.example.cricketteam.datasource.repository.TestDataRepsitory;
 import com.example.cricketteam.datasource.schemas.AssignTask;
 import com.example.cricketteam.datasource.schemas.Player;
 import com.example.cricketteam.datasource.schemas.Task;
@@ -21,15 +20,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TestService {
-    private final TestDataRepsitory testDataRepsitory;
+public class TeamService {
     private final PlayerRepository playerRepository;
     private final TaskRepository taskRepository;
     private final AssignTaskRepository assignTaskRepository;
-
-    public Object getAll() {
-        return testDataRepsitory.findAll();
-    }
 
     public Object addPlayer(Player player) {
         playerRepository.save(player);
@@ -79,7 +73,4 @@ public class TestService {
         return scheduledTaskResponseList;
     }
 
-    public List<AssignTask> getAllAssignedTasks() {
-        return assignTaskRepository.findAll();
-    }
 }
