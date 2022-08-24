@@ -1,5 +1,7 @@
 package com.example.cricketteam.controller;
 
+import com.example.cricketteam.Dto.AssignTaskDto;
+import com.example.cricketteam.Dto.ScheduleDto;
 import com.example.cricketteam.datasource.schemas.Player;
 import com.example.cricketteam.datasource.schemas.Task;
 import com.example.cricketteam.service.TestService;
@@ -30,5 +32,22 @@ public class TestController {
         return testService.addTask(task);
     }
 
+    @PostMapping("/task/assign")
+    public Object assignTask(@RequestBody AssignTaskDto assignTaskDto) {
+        return testService.assignTask(assignTaskDto);
+    }
 
+    @GetMapping("/player/getAssignedTasks/{playerId}")
+    public Object getAssignedTasks(@PathVariable("playerId") final int playerId) {
+        return testService.getAssignedTasks(playerId);
+    }
+    @PostMapping("/getAllAssignedTasksByTimeRange")
+    public Object getAllAssignedTasksByTimeRange(@RequestBody ScheduleDto scheduleDto) {
+        return testService.getAllAssignedTasksByTimeRange(scheduleDto);
+    }
+
+    @GetMapping("/task/getAssignedTasks")
+    public Object getAllAssignedTasks() {
+        return testService.getAllAssignedTasks();
+    }
 }

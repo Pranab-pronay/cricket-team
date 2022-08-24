@@ -1,11 +1,20 @@
 package com.example.cricketteam.datasource.schemas;
 
-import lombok.Data;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
-@Data
+
 @Entity(name = "Task")
+@Getter
+@Setter
+@NoArgsConstructor
+@Accessors(chain = true)
+
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
