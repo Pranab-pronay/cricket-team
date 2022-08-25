@@ -27,7 +27,7 @@ public class Data {
 
     public static String newAssignTask(String taskTitle, int player) throws JsonProcessingException {
         return getObjectMapper().writeValueAsString(new AssignTaskDto().setTaskTitle(taskTitle)
-                .setPlayers(new ArrayList<>(List.of(player, 5)))
+                .setPlayers(new ArrayList<>(List.of(player)))
                 .setInitTime(LocalDateTime.of(2022, 8, 26, 12, 11))
                 .setFinishTime(LocalDateTime.of(2022, 8, 26, 20, 10))
         );
