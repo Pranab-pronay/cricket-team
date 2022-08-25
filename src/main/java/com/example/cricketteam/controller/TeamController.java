@@ -1,13 +1,16 @@
 package com.example.cricketteam.controller;
 
-import com.example.cricketteam.Dto.AssignTaskDto;
-import com.example.cricketteam.Dto.ScheduleDto;
+import com.example.cricketteam.Dto.*;
+import com.example.cricketteam.datasource.schemas.AssignTask;
 import com.example.cricketteam.datasource.schemas.Player;
 import com.example.cricketteam.datasource.schemas.Task;
 import com.example.cricketteam.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -17,27 +20,27 @@ public class TeamController {
     private final TeamService testService;
 
     @PostMapping("/player/add")
-    public Object addPlayer(@RequestBody Player player) {
-        return testService.addPlayer(player);
+    public PlayerDto addPlayer(@RequestBody @Validated PlayerDto playerDto) {
+        return testService.addPlayer(playerDto);
     }
 
     @PostMapping("/task/add")
-    public Object addTask(@RequestBody Task task) {
-        return testService.addTask(task);
+    public TaskDto addTask(@RequestBody @Validated TaskDto taskDto) {
+        return testService.addTask(taskDto);
     }
 
     @PostMapping("/task/assign")
-    public Object assignTask(@RequestBody AssignTaskDto assignTaskDto) {
+    public String assignTask(@RequestBody  @Validated AssignTaskDto assignTaskDto) {
         return testService.assignTask(assignTaskDto);
     }
 
     @GetMapping("/player/getAssignedTasks/{playerId}")
-    public Object getAssignedTasks(@PathVariable("playerId") final int playerId) {
+    public List<AssignTask> getAssignedTasks(@PathVariable("playerId") final int playerId) {
         return testService.getAssignedTasks(playerId);
     }
 
     @PostMapping("/getAllAssignedTasksByTimeRange")
-    public Object getAllAssignedTasksByTimeRange(@RequestBody ScheduleDto scheduleDto) {
+    public  List<ScheduledTaskResponse> getAllAssignedTasksByTimeRange(@RequestBody@Validated ScheduleDto scheduleDto) {
         return testService.getAllAssignedTasksByTimeRange(scheduleDto);
     }
 

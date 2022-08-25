@@ -1,8 +1,6 @@
 package com.example.cricketteam.service;
 
-import com.example.cricketteam.Dto.AssignTaskDto;
-import com.example.cricketteam.Dto.ScheduleDto;
-import com.example.cricketteam.Dto.ScheduledTaskResponse;
+import com.example.cricketteam.Dto.*;
 import com.example.cricketteam.datasource.repository.AssignTaskRepository;
 import com.example.cricketteam.datasource.repository.PlayerRepository;
 import com.example.cricketteam.datasource.repository.TaskRepository;
@@ -25,20 +23,27 @@ public class TeamService {
     private final TaskRepository taskRepository;
     private final AssignTaskRepository assignTaskRepository;
 
-    public Object addPlayer(Player player) {
+    public PlayerDto addPlayer(PlayerDto playerDto) {
+        Player player = new Player().setName(playerDto.getName());
         playerRepository.save(player);
-        return "successfully added" + player;
+        playerDto.setId(player.getId()).setResponseMessage("Successfully Added");
+        return playerDto;
     }
 
-    public Object addTask(Task task) {
-        taskRepository.save(task);
-        return "successfully added " + task.getTitle();
+    public TaskDto addTask(TaskDto taskDto) {
+        Task task = taskRepository.findFirstByTitle(taskDto.getTitle());
+        if (task!= null)
+            return taskDto.setResponseMessage("Task Already Exist");
+        Task newTask= new Task().setTitle(taskDto.getTitle());
+        taskRepository.save(newTask);
+        taskDto.setResponseMessage("Successfully Added");
+        return taskDto;
     }
 
-    public Object assignTask(AssignTaskDto assignTaskDto) {
-        Task task = taskRepository.findByTitle(assignTaskDto.getTaskTitle());
+    public String assignTask(AssignTaskDto assignTaskDto) {
+        Task task = taskRepository.findFirstByTitle(assignTaskDto.getTaskTitle());
         if (task == null)
-            throw new ObjectNotFoundException("Invalid Task!");
+            throw new ObjectNotFoundException("Invalid Task Title");
         List<Player> players = playerRepository.findByIdIn(assignTaskDto.getPlayers());
         for (Player player : players) {
             AssignTask assignTask = new AssignTask()
@@ -51,14 +56,14 @@ public class TeamService {
         return "Task Assigned";
     }
 
-    public Object getAssignedTasks(int playerId) {
+    public List<AssignTask> getAssignedTasks(int playerId) {
         Optional<Player> player = playerRepository.findById(playerId);
         if (player.isEmpty())
             throw new ObjectNotFoundException("Player Not Found");
         return player.get().getAssignTaskList();
     }
 
-    public Object getAllAssignedTasksByTimeRange(ScheduleDto scheduleDto) {
+    public  List<ScheduledTaskResponse> getAllAssignedTasksByTimeRange(ScheduleDto scheduleDto) {
         List<AssignTask> assignTaskList= assignTaskRepository.findAllByInitTimeAfterAndFinishTimeBefore(scheduleDto.getInitTime(), scheduleDto.getFinishTime());
         List<ScheduledTaskResponse> scheduledTaskResponseList=new ArrayList<>();
         for(AssignTask assignTask: assignTaskList){
